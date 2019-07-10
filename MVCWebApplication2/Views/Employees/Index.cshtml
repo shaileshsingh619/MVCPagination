@@ -1,0 +1,78 @@
+﻿@*@model IEnumerable<MVCWebApplication2.Models.Employee>*@
+@using PagedList.Mvc;
+@model PagedList.IPagedList<MVCWebApplication2.Models.Employee>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Employees";
+}
+
+
+<h2>Employee Details</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create") <br />
+    @Html.ActionLink("Index", "Index")
+
+    @using (Html.BeginForm("Index", "Employees", FormMethod.Get)) {
+        <p>Search Name: @Html.TextBox("searchString")<br />
+            <input type="submit" value="Filter" />
+        </p>
+    }
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Name)*@
+            Name
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Sirname)*@
+            @Html.ActionLink("Sirname", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Age)*@
+            Age
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Designation)*@
+            Designation
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.DOJ)*@
+            @Html.ActionLink("Date of Joining", "Index", new {sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sirname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Age)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Designation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DOJ)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
